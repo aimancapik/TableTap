@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { LucideMinus, LucidePlus } from '@lucide/angular';
 
 import { CartService } from '../../../core/cart.service';
 import { formatMoney } from '../../../core/money';
@@ -10,7 +11,7 @@ import { TableService } from '../../../core/table.service';
 
 @Component({
   selector: 'app-cart-page',
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, LucideMinus, LucidePlus],
   templateUrl: './cart-page.html',
   styleUrl: './cart-page.css',
 })

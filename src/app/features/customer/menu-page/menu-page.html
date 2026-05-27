@@ -7,12 +7,7 @@
       </div>
       <a class="cart-icon" routerLink="/cart" aria-label="Open cart">
         <span>{{ cart.itemCount() }}</span>
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path
-            d="M7 8.5h10l.8 10.3a1.4 1.4 0 0 1-1.4 1.5H7.6a1.4 1.4 0 0 1-1.4-1.5L7 8.5Z"
-          />
-          <path d="M9.2 8.5V7a2.8 2.8 0 0 1 5.6 0v1.5" />
-        </svg>
+        <svg lucideShoppingBag size="24" strokeWidth="1.9" aria-hidden="true"></svg>
       </a>
     </header>
 
@@ -132,7 +127,7 @@
   <section class="modal-backdrop" (click)="closeItem()">
     <article class="item-modal" (click)="$event.stopPropagation()">
       <button class="close-button" type="button" (click)="closeItem()" aria-label="Close">
-        <span aria-hidden="true">×</span>
+        <svg lucideX size="18" strokeWidth="2.4" aria-hidden="true"></svg>
       </button>
       <img class="modal-image" [src]="item.imageUrl" [alt]="item.name" />
       <div class="modal-content">
@@ -144,11 +139,11 @@
           <span>{{ formatMoney(item.price) }}</span>
           <div>
             <button type="button" (click)="decreaseQuantity()" aria-label="Decrease quantity">
-              <span aria-hidden="true">−</span>
+              <svg lucideMinus size="16" strokeWidth="2.6" aria-hidden="true"></svg>
             </button>
             <strong>{{ detailQuantity() }}</strong>
             <button type="button" (click)="increaseQuantity()" aria-label="Increase quantity">
-              <span aria-hidden="true">+</span>
+              <svg lucidePlus size="16" strokeWidth="2.6" aria-hidden="true"></svg>
             </button>
           </div>
         </div>

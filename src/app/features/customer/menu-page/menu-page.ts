@@ -2,6 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import {
+  LucideMinus,
+  LucidePlus,
+  LucideShoppingBag,
+  LucideX,
+} from '@lucide/angular';
 
 import { CartService } from '../../../core/cart.service';
 import { formatMoney } from '../../../core/money';
@@ -18,7 +24,15 @@ interface CategoryCard {
 
 @Component({
   selector: 'app-menu-page',
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterLink,
+    LucideMinus,
+    LucidePlus,
+    LucideShoppingBag,
+    LucideX,
+  ],
   templateUrl: './menu-page.html',
   styleUrl: './menu-page.css',
 })

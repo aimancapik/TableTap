@@ -462,13 +462,6 @@
   background: rgba(17, 23, 17, 0.66);
 }
 
-.close-button span {
-  display: block;
-  font-size: 1.18rem;
-  font-weight: 700;
-  line-height: 1;
-}
-
 .modal-image {
   width: 100%;
   aspect-ratio: 1.1 / 0.72;
@@ -518,17 +511,6 @@
   border-radius: 999px;
   color: #fff;
   background: var(--forest);
-}
-
-.quantity-row button span {
-  display: block;
-  font-size: 1.12rem;
-  font-weight: 800;
-  line-height: 1;
-}
-
-.quantity-row button:first-child span {
-  transform: none;
 }
 
 .addons h3 {

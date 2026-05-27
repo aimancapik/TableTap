@@ -42,11 +42,11 @@
               <div class="item-actions">
                 <div class="stepper">
                   <button type="button" (click)="updateQuantity(item.cartId, item.quantity - 1)">
-                    <span aria-hidden="true">−</span>
+                    <svg lucideMinus size="15" strokeWidth="2.6" aria-hidden="true"></svg>
                   </button>
                   <strong>{{ item.quantity }}</strong>
                   <button type="button" (click)="updateQuantity(item.cartId, item.quantity + 1)">
-                    <span aria-hidden="true">+</span>
+                    <svg lucidePlus size="15" strokeWidth="2.6" aria-hidden="true"></svg>
                   </button>
                 </div>
                 <button class="remove" type="button" (click)="removeItem(item.cartId)">
