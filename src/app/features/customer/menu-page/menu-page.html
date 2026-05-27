@@ -132,7 +132,7 @@
   <section class="modal-backdrop" (click)="closeItem()">
     <article class="item-modal" (click)="$event.stopPropagation()">
       <button class="close-button" type="button" (click)="closeItem()" aria-label="Close">
-        x
+        <span aria-hidden="true">×</span>
       </button>
       <img class="modal-image" [src]="item.imageUrl" [alt]="item.name" />
       <div class="modal-content">
@@ -143,9 +143,13 @@
         <div class="quantity-row">
           <span>{{ formatMoney(item.price) }}</span>
           <div>
-            <button type="button" (click)="decreaseQuantity()">-</button>
+            <button type="button" (click)="decreaseQuantity()" aria-label="Decrease quantity">
+              <span aria-hidden="true">−</span>
+            </button>
             <strong>{{ detailQuantity() }}</strong>
-            <button type="button" (click)="increaseQuantity()">+</button>
+            <button type="button" (click)="increaseQuantity()" aria-label="Increase quantity">
+              <span aria-hidden="true">+</span>
+            </button>
           </div>
         </div>
 

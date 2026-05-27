@@ -42,11 +42,11 @@
               <div class="item-actions">
                 <div class="stepper">
                   <button type="button" (click)="updateQuantity(item.cartId, item.quantity - 1)">
-                    -
+                    <span aria-hidden="true">−</span>
                   </button>
                   <strong>{{ item.quantity }}</strong>
                   <button type="button" (click)="updateQuantity(item.cartId, item.quantity + 1)">
-                    +
+                    <span aria-hidden="true">+</span>
                   </button>
                 </div>
                 <button class="remove" type="button" (click)="removeItem(item.cartId)">
