@@ -7,7 +7,7 @@
   width: min(100%, 440px);
   min-height: 100vh;
   margin: 0 auto;
-  padding: 22px 18px 32px;
+  padding: 18px 16px 28px;
   background: var(--cream);
 }
 
@@ -87,7 +87,7 @@
 .loading-card,
 .empty-state {
   margin-top: 18px;
-  padding: 12px 14px;
+  padding: 10px 12px;
   border: 1px solid var(--line);
   border-radius: 14px;
   background: rgba(255, 250, 241, 0.78);
@@ -115,14 +115,14 @@
 .category-landing {
   display: grid;
   gap: 0;
-  margin: 18px -18px -32px;
+  margin: 14px -16px -28px;
 }
 
 .category-band {
   position: relative;
   display: grid;
   width: 100%;
-  min-height: 132px;
+  min-height: 124px;
   place-items: center;
   overflow: hidden;
   border: 0;
@@ -133,20 +133,21 @@
 
 .category-band strong {
   z-index: 1;
-  font-size: clamp(1.28rem, 6.5vw, 1.72rem);
-  font-weight: 840;
-  letter-spacing: 0.42em;
+  font-family: "Montserrat", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(1.22rem, 6.1vw, 1.64rem);
+  font-weight: 800;
+  letter-spacing: 0.34em;
   line-height: 1;
-  text-indent: 0.42em;
+  text-indent: 0.34em;
   text-transform: uppercase;
 }
 
 .category-band img {
   position: absolute;
   right: -32px;
-  bottom: -38px;
-  width: 172px;
-  height: 172px;
+  bottom: -34px;
+  width: 160px;
+  height: 160px;
   border-radius: 999px;
   object-fit: cover;
   filter: saturate(1.02);
@@ -154,7 +155,7 @@
 
 .category-band img.align-left {
   right: auto;
-  left: -38px;
+  left: -34px;
 }
 
 .tone-cream {
@@ -183,7 +184,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-top: 20px;
+  margin-top: 16px;
 }
 
 .menu-level-header button {
@@ -225,7 +226,7 @@
 .search-box {
   display: grid;
   gap: 8px;
-  margin-top: 22px;
+  margin-top: 18px;
 }
 
 .search-box span,
@@ -258,8 +259,8 @@
 .category-row {
   display: flex;
   gap: 8px;
-  margin: 16px -18px 0;
-  padding: 0 18px 3px;
+  margin: 14px -16px 0;
+  padding: 0 16px 3px;
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -286,7 +287,7 @@
 }
 
 .section-heading {
-  margin-top: 24px;
+  margin-top: 20px;
 }
 
 .section-heading h2 {

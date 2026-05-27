@@ -7,7 +7,7 @@
   width: min(100%, 440px);
   min-height: 100vh;
   margin: 0 auto;
-  padding: 22px 18px 32px;
+  padding: 18px 16px 28px;
   background: var(--cream);
 }
 
@@ -53,8 +53,8 @@
 }
 
 .table-note {
-  margin-top: 18px;
-  padding: 12px 14px;
+  margin-top: 14px;
+  padding: 10px 12px;
   border: 1px solid var(--line);
   border-radius: 14px;
   background: rgba(255, 250, 241, 0.78);
@@ -75,7 +75,7 @@
 .cart-list {
   display: grid;
   gap: 12px;
-  margin-top: 18px;
+  margin-top: 14px;
 }
 
 .cart-item {

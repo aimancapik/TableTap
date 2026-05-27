@@ -7,7 +7,7 @@
   width: min(100%, 440px);
   min-height: 100vh;
   margin: 0 auto;
-  padding: 22px 18px 32px;
+  padding: 18px 16px 28px;
   background: var(--cream);
 }
 
@@ -48,8 +48,8 @@
 }
 
 .status-hero {
-  margin-top: 18px;
-  padding: 24px 18px;
+  margin-top: 14px;
+  padding: 22px 16px;
   border-radius: 20px;
   color: #fff;
   background: var(--forest);
