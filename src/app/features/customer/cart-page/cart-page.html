@@ -1,0 +1,102 @@
+<main class="cart-shell">
+  <section class="cart-frame">
+    <header class="cart-header">
+      <a [routerLink]="['/menu/table', tableNumber()]" aria-label="Back to menu">Back</a>
+      <div>
+        <p>Cart</p>
+        <h1>Table {{ tableNumber() }}</h1>
+      </div>
+    </header>
+
+    @if (cart.items().length) {
+      <section class="table-note">
+        <span>You are ordering for</span>
+        <strong>{{ tableNumber() }}</strong>
+      </section>
+
+      <section class="cart-list">
+        @for (item of cart.items(); track item.cartId) {
+          <article class="cart-item">
+            <img [src]="item.imageUrl" [alt]="item.itemNameSnapshot" />
+            <div class="item-body">
+              <div class="item-title">
+                <h2>{{ item.itemNameSnapshot }}</h2>
+                <strong>{{ formatMoney(item.subtotal) }}</strong>
+              </div>
+              @if (item.addOns.length) {
+                <p class="addons">
+                  @for (addOn of item.addOns; track addOn.id) {
+                    <span>{{ addOn.name }}</span>
+                  }
+                </p>
+              }
+              <label>
+                <span>Item note</span>
+                <input
+                  type="text"
+                  placeholder="Less spicy, no ice..."
+                  [ngModel]="item.notes"
+                  (ngModelChange)="updateNotes(item.cartId, $event)"
+                />
+              </label>
+              <div class="item-actions">
+                <div class="stepper">
+                  <button type="button" (click)="updateQuantity(item.cartId, item.quantity - 1)">
+                    -
+                  </button>
+                  <strong>{{ item.quantity }}</strong>
+                  <button type="button" (click)="updateQuantity(item.cartId, item.quantity + 1)">
+                    +
+                  </button>
+                </div>
+                <button class="remove" type="button" (click)="removeItem(item.cartId)">
+                  Remove
+                </button>
+              </div>
+            </div>
+          </article>
+        }
+      </section>
+
+      <label class="order-note">
+        <span>Order note</span>
+        <textarea
+          rows="3"
+          placeholder="Anything the kitchen should know?"
+          [ngModel]="customerNote()"
+          (ngModelChange)="customerNote.set($event)"
+        ></textarea>
+      </label>
+
+      <section class="summary">
+        <div>
+          <span>Subtotal</span>
+          <strong>{{ formatMoney(cart.subtotal()) }}</strong>
+        </div>
+        <div>
+          <span>Service charge 6%</span>
+          <strong>{{ formatMoney(cart.serviceCharge()) }}</strong>
+        </div>
+        <div class="total">
+          <span>Total</span>
+          <strong>{{ formatMoney(cart.total()) }}</strong>
+        </div>
+      </section>
+
+      <button
+        class="submit-order"
+        type="button"
+        [disabled]="isSubmitting()"
+        (click)="submitOrder()"
+      >
+        {{ isSubmitting() ? 'Sending order...' : 'Submit order' }}
+      </button>
+    } @else {
+      <section class="empty-cart">
+        <p>Your cart is empty</p>
+        <h1>Pick something delicious first.</h1>
+        <a [routerLink]="['/menu/table', tableNumber()]">Browse menu</a>
+      </section>
+    }
+  </section>
+</main>

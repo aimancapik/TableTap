@@ -1,0 +1,180 @@
+<main class="customer-shell">
+  <section class="phone-frame">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Good evening</p>
+        <h1>TableTap Cafe</h1>
+      </div>
+      <a class="cart-icon" routerLink="/cart" aria-label="Open cart">
+        <span>{{ cart.itemCount() }}</span>
+        <strong>Bag</strong>
+      </a>
+    </header>
+
+    @if (invalidTable()) {
+      <section class="notice danger">
+        This table is inactive. Showing the demo menu for Table T12.
+      </section>
+    } @else if (table()) {
+      <section class="table-strip">
+        <span>Ordering for</span>
+        <strong>{{ table()?.tableNumber }}</strong>
+        <small>{{ table()?.seats }} seats</small>
+      </section>
+    }
+
+    @if (isLoading()) {
+      <section class="loading-card">Preparing today's menu...</section>
+    } @else if (!selectedCategory()) {
+      <section class="category-landing" aria-label="Menu categories">
+        @for (card of categoryCards(); track card.category.slug; let index = $index) {
+          <button
+            type="button"
+            class="category-band"
+            [class]="'category-band tone-' + card.tone"
+            (click)="setCategory(card.category.slug)"
+          >
+            <strong>{{ card.category.name }}</strong>
+            <img
+              [src]="card.imageUrl"
+              [alt]="card.category.name"
+              [class.align-left]="index % 2 === 1"
+            />
+          </button>
+        }
+      </section>
+    } @else {
+      <section class="menu-level-header">
+        <button type="button" (click)="showCategories()">All categories</button>
+        <div>
+          <p>Now viewing</p>
+          <h2>{{ selectedCategoryName() }}</h2>
+        </div>
+      </section>
+
+      <label class="search-box">
+        <span>Search</span>
+        <input
+          type="search"
+          placeholder="Search rice, drinks, spicy..."
+          [ngModel]="searchTerm()"
+          (ngModelChange)="updateSearch($event)"
+        />
+      </label>
+
+      <nav class="category-row" aria-label="Menu categories">
+        @for (category of categories(); track category.id) {
+          <button
+            type="button"
+            [class.active]="activeCategory() === category.slug"
+            (click)="setCategory(category.slug)"
+          >
+            {{ category.name }}
+          </button>
+        }
+      </nav>
+
+      <section class="section-heading">
+        <div>
+          <p>{{ selectedCategoryName() }}</p>
+          <h2>{{ filteredItems().length }} picks for your table</h2>
+        </div>
+      </section>
+
+      @if (filteredItems().length) {
+        <section class="food-grid">
+          @for (item of filteredItems(); track item.id) {
+            <article class="food-card" [class.sold-out]="!item.isAvailable">
+              <button type="button" class="food-hitbox" (click)="openItem(item)">
+                <img [src]="item.imageUrl" [alt]="item.name" />
+                <span class="tag">{{ item.tags[0] }}</span>
+                <div class="food-copy">
+                  <h3>{{ item.name }}</h3>
+                  <p>{{ item.description }}</p>
+                  <strong>{{ formatMoney(item.price) }}</strong>
+                </div>
+              </button>
+              <button
+                class="add-button"
+                type="button"
+                [disabled]="!item.isAvailable"
+                (click)="openItem(item)"
+              >
+                {{ item.isAvailable ? 'Add' : 'Sold out' }}
+              </button>
+            </article>
+          }
+        </section>
+      } @else {
+        <section class="empty-state">
+          <h2>No matching dishes</h2>
+          <p>Try another category or search for a different craving.</p>
+        </section>
+      }
+    }
+  </section>
+
+  @if (cart.itemCount() > 0) {
+    <a class="floating-cart" routerLink="/cart">
+      <span>{{ cart.itemCount() }} items</span>
+      <strong>{{ cartTotal() }}</strong>
+      <em>View cart</em>
+    </a>
+  }
+</main>
+
+@if (selectedItem(); as item) {
+  <section class="modal-backdrop" (click)="closeItem()">
+    <article class="item-modal" (click)="$event.stopPropagation()">
+      <button class="close-button" type="button" (click)="closeItem()" aria-label="Close">
+        x
+      </button>
+      <img class="modal-image" [src]="item.imageUrl" [alt]="item.name" />
+      <div class="modal-content">
+        <p class="eyebrow">{{ item.prepMinutes }} min prep</p>
+        <h2>{{ item.name }}</h2>
+        <p>{{ item.description }}</p>
+
+        <div class="quantity-row">
+          <span>{{ formatMoney(item.price) }}</span>
+          <div>
+            <button type="button" (click)="decreaseQuantity()">-</button>
+            <strong>{{ detailQuantity() }}</strong>
+            <button type="button" (click)="increaseQuantity()">+</button>
+          </div>
+        </div>
+
+        @if (item.addOns.length) {
+          <section class="addons">
+            <h3>Add-ons</h3>
+            @for (addOn of item.addOns; track addOn.id) {
+              <label>
+                <input
+                  type="checkbox"
+                  [checked]="isAddOnSelected(addOn.id)"
+                  (change)="toggleAddOn(addOn, $any($event.target).checked)"
+                />
+                <span>{{ addOn.name }}</span>
+                <strong>{{ addOn.price ? '+' + formatMoney(addOn.price) : 'Free' }}</strong>
+              </label>
+            }
+          </section>
+        }
+
+        <label class="note-box">
+          <span>Special request</span>
+          <textarea
+            rows="3"
+            placeholder="Less spicy, no onion, serve drinks first..."
+            [ngModel]="detailNotes()"
+            (ngModelChange)="detailNotes.set($event)"
+          ></textarea>
+        </label>
+
+        <button class="primary-action" type="button" (click)="addSelectedToCart()">
+          Add to cart - {{ detailTotal() }}
+        </button>
+      </div>
+    </article>
+  </section>
+}

@@ -1,0 +1,58 @@
+<main class="status-shell">
+  <section class="status-frame">
+    <header class="status-header">
+      <a [routerLink]="['/menu/table', order()?.tableNumber ?? 'T12']">Menu</a>
+      <div>
+        <p>Order status</p>
+        <h1>#{{ orderNumber() }}</h1>
+      </div>
+    </header>
+
+    @if (order(); as currentOrder) {
+      <section class="status-hero">
+        <p>Table {{ currentOrder.tableNumber }}</p>
+        <h2>{{ steps[currentStepIndex()].label }}</h2>
+        <span>{{ steps[currentStepIndex()].hint }}</span>
+      </section>
+
+      <section class="progress-card">
+        @for (step of steps; track step.status; let index = $index) {
+          <article [class.complete]="isStepComplete(index)">
+            <div class="dot">{{ index + 1 }}</div>
+            <div>
+              <h3>{{ step.label }}</h3>
+              <p>{{ step.hint }}</p>
+            </div>
+          </article>
+        }
+      </section>
+
+      <section class="order-card">
+        <div class="order-meta">
+          <span>Placed</span>
+          <strong>{{ currentOrder.createdAt | date: 'shortTime' }}</strong>
+        </div>
+        @for (item of currentOrder.items; track item.menuItemId) {
+          <div class="order-line">
+            <div>
+              <strong>{{ item.quantity }}x {{ item.itemNameSnapshot }}</strong>
+              @if (item.notes) {
+                <span>{{ item.notes }}</span>
+              }
+            </div>
+            <em>{{ formatMoney(item.subtotal) }}</em>
+          </div>
+        }
+        @if (currentOrder.customerNote) {
+          <p class="customer-note">{{ currentOrder.customerNote }}</p>
+        }
+        <div class="total-line">
+          <span>Total paid at counter</span>
+          <strong>{{ formatMoney(currentOrder.totalAmount) }}</strong>
+        </div>
+      </section>
+    } @else {
+      <section class="loading-status">Finding your order...</section>
+    }
+  </section>
+</main>
