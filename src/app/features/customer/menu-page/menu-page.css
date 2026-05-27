@@ -78,8 +78,14 @@
   background: var(--clay);
 }
 
-.cart-icon strong {
-  font-size: 0.78rem;
+.cart-icon svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.9;
 }
 
 .table-strip,
@@ -305,7 +311,7 @@
   position: relative;
   display: grid;
   grid-template-columns: 118px 1fr;
-  min-height: 132px;
+  height: 144px;
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 18px;
@@ -327,8 +333,7 @@
 
 .food-hitbox img {
   width: 118px;
-  height: 100%;
-  min-height: 132px;
+  height: 144px;
   object-fit: cover;
 }
 
