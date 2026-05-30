@@ -12,7 +12,8 @@ import {
 import { CartService } from '../../../core/cart.service';
 import { formatMoney } from '../../../core/money';
 import { MenuService } from '../../../core/menu.service';
-import { Category, MenuAddOn, MenuItem, RestaurantTable } from '../../../core/models';
+import { Category, MenuAddOn, MenuItem, RestaurantTable, TableBill } from '../../../core/models';
+import { OrderService } from '../../../core/order.service';
 import { TableService } from '../../../core/table.service';
 
 interface CategoryCard {
@@ -39,12 +40,14 @@ interface CategoryCard {
 export class MenuPage {
   private readonly route = inject(ActivatedRoute);
   private readonly menuService = inject(MenuService);
+  private readonly orderService = inject(OrderService);
   private readonly tableService = inject(TableService);
   readonly cart = inject(CartService);
 
   readonly categories = signal<Category[]>([]);
   readonly items = signal<MenuItem[]>([]);
   readonly table = signal<RestaurantTable | null>(null);
+  readonly tableBill = signal<TableBill | null>(null);
   readonly isLoading = signal(true);
   readonly invalidTable = signal(false);
   readonly searchTerm = signal('');
@@ -103,6 +106,7 @@ export class MenuPage {
   });
 
   readonly cartTotal = computed(() => formatMoney(this.cart.total()));
+  readonly latestBillOrderNumber = computed(() => this.tableBill()?.orders[0]?.orderNumber ?? null);
 
   constructor() {
     this.loadMenu();
@@ -112,6 +116,11 @@ export class MenuPage {
       this.tableService.validateTable(tableNumber).subscribe((table) => {
         this.table.set(table);
         this.invalidTable.set(!table);
+        if (table) {
+          this.loadTableBill(table.tableNumber);
+        } else {
+          this.tableBill.set(null);
+        }
       });
     });
   }
@@ -202,6 +211,12 @@ export class MenuPage {
       this.categories.set(payload.categories);
       this.items.set(payload.items);
       this.isLoading.set(false);
+    });
+  }
+
+  private loadTableBill(tableNumber: string) {
+    this.orderService.getTableBill(tableNumber).subscribe((bill) => {
+      this.tableBill.set(bill.orders.length ? bill : null);
     });
   }
 }

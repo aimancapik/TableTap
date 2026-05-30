@@ -26,6 +26,16 @@
       </section>
     }
 
+    @if (tableBill(); as bill) {
+      <a class="active-bill-strip" [routerLink]="['/order', latestBillOrderNumber()]">
+        <div>
+          <span>Active table bill</span>
+          <strong>{{ formatMoney(bill.totalDue) }}</strong>
+        </div>
+        <em>{{ bill.itemCount }} items</em>
+      </a>
+    }
+
     @if (isLoading()) {
       <section class="loading-card">Preparing today's menu...</section>
     } @else if (!selectedCategory()) {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnDestroy, signal } from '@angular/core';
+import { Component, HostListener, computed, inject, OnDestroy, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { formatMoney } from '../../../core/money';
@@ -43,6 +43,7 @@ export class OrderStatusPage implements OnDestroy {
   readonly order = signal<Order | null>(null);
   readonly tableBill = signal<TableBill | null>(null);
   readonly orderNumber = signal('A1001');
+  readonly showBillDetails = signal(false);
   readonly steps = computed(() =>
     this.order()?.orderType === 'TAKEOUT'
       ? TAKEOUT_STEPS
@@ -84,6 +85,30 @@ export class OrderStatusPage implements OnDestroy {
 
   isStepComplete(index: number) {
     return index <= this.currentStepIndex();
+  }
+
+  openBillDetails() {
+    if (this.showBillDetails()) {
+      return;
+    }
+
+    this.showBillDetails.set(true);
+    window.history.pushState({ tabletapBillDetails: true }, '', window.location.href);
+  }
+
+  closeBillDetails() {
+    if (!this.showBillDetails()) {
+      return;
+    }
+
+    window.history.back();
+  }
+
+  @HostListener('window:popstate')
+  onPopState() {
+    if (this.showBillDetails()) {
+      this.showBillDetails.set(false);
+    }
   }
 
   private refreshOrder() {

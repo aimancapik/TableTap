@@ -62,23 +62,7 @@
         @if (currentOrder.customerNote) {
           <p class="customer-note">{{ currentOrder.customerNote }}</p>
         }
-        <div class="payment-meta">
-          <span>Payment</span>
-          <strong>Pay at counter</strong>
-          <em>{{ currentOrder.paymentStatus === 'PAID' ? 'Paid' : 'Unpaid' }}</em>
-        </div>
-        @if (currentOrder.paymentStatus === 'UNPAID') {
-          <p class="payment-instruction">
-            {{
-              currentOrder.orderType === 'TAKEOUT'
-                ? 'Your order is already with the kitchen. Pay at the counter when it is ready for pickup.'
-                : currentOrder.orderType === 'PACKED_TO_GO'
-                  ? 'This packed round is on your table bill. You can order more and pay the final total before leaving.'
-                  : 'This round is on your table bill. You can order more and pay the final total before leaving.'
-            }}
-          </p>
-        }
-        <div class="total-line">
+        <div class="total-line" id="bill-details">
           <span>{{
             currentOrder.orderType === 'TAKEOUT'
               ? 'Total due at pickup'
@@ -91,11 +75,64 @@
           }}</strong>
         </div>
         @if (currentOrder.orderType !== 'TAKEOUT' && tableBill(); as bill) {
-          <section class="bill-card">
-            <div class="bill-heading">
-              <span>{{ bill.orders.length }} order rounds</span>
-              <strong>{{ bill.itemCount }} items</strong>
+          <button class="bill-summary" type="button" (click)="openBillDetails()">
+            <span>View table bill</span>
+            <strong>{{ bill.itemCount }} items</strong>
+          </button>
+        }
+        <section class="payment-section">
+          <div class="payment-meta">
+            <span>Payment</span>
+            <strong>Pay at counter</strong>
+            <em>{{ currentOrder.paymentStatus === 'PAID' ? 'Paid' : 'Unpaid' }}</em>
+          </div>
+          @if (currentOrder.paymentStatus === 'UNPAID') {
+            <p class="payment-instruction">
+              {{
+                currentOrder.orderType === 'TAKEOUT'
+                  ? 'Your order is already with the kitchen. Pay at the counter when it is ready for pickup.'
+                  : currentOrder.orderType === 'PACKED_TO_GO'
+                    ? 'This packed round is on your table bill. You can order more and pay the final total before leaving.'
+                    : 'This round is on your table bill. You can order more and pay the final total before leaving.'
+              }}
+            </p>
+          }
+        </section>
+      </section>
+    } @else {
+      <section class="loading-status">Finding your order...</section>
+    }
+  </section>
+</main>
+
+@if (order(); as currentOrder) {
+  @if (currentOrder.orderType !== 'TAKEOUT' && tableBill(); as bill) {
+    @if (showBillDetails()) {
+      <section class="bill-sheet-backdrop" (click)="closeBillDetails()">
+        <article
+          class="bill-sheet"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="bill-sheet-title"
+          (click)="$event.stopPropagation()"
+        >
+          <div class="sheet-handle" aria-hidden="true"></div>
+          <header class="sheet-header">
+            <div>
+              <p>Table {{ bill.tableNumber }}</p>
+              <h2 id="bill-sheet-title">Bill details</h2>
             </div>
+            <button type="button" aria-label="Close bill details" (click)="closeBillDetails()">
+              Close
+            </button>
+          </header>
+
+          <div class="sheet-total">
+            <span>{{ bill.orders.length }} order rounds</span>
+            <strong>{{ formatMoney(bill.totalDue) }}</strong>
+          </div>
+
+          <section class="bill-card sheet-bill-card">
             @for (billOrder of bill.orders; track billOrder.orderNumber) {
               <article class="bill-round">
                 <div>
@@ -116,10 +153,8 @@
               </section>
             }
           </section>
-        }
+        </article>
       </section>
-    } @else {
-      <section class="loading-status">Finding your order...</section>
     }
-  </section>
-</main>
+  }
+}
