@@ -9,9 +9,65 @@
     </header>
 
     @if (cart.items().length) {
-      <section class="table-note">
-        <span>You are ordering for</span>
-        <strong>{{ tableNumber() }}</strong>
+      <section class="fulfillment-card" aria-label="Order type">
+        <div class="fulfillment-tabs">
+          <button
+            type="button"
+            [class.active]="orderType() === 'DINE_IN'"
+            (click)="selectOrderType('DINE_IN')"
+          >
+            Dine in
+          </button>
+          <button
+            type="button"
+            [class.active]="orderType() === 'PACKED_TO_GO'"
+            (click)="selectOrderType('PACKED_TO_GO')"
+          >
+            Pack to go
+          </button>
+          <button
+            type="button"
+            [class.active]="orderType() === 'TAKEOUT'"
+            (click)="selectOrderType('TAKEOUT')"
+          >
+            Takeout
+          </button>
+        </div>
+
+        @if (orderType() === 'DINE_IN') {
+          <div class="table-note">
+            <span>You are ordering for</span>
+            <strong>{{ tableNumber() }}</strong>
+          </div>
+        } @else if (orderType() === 'PACKED_TO_GO') {
+          <div class="table-note packed-note">
+            <span>Packed order added to table bill</span>
+            <strong>{{ tableNumber() }}</strong>
+          </div>
+        } @else {
+          <div class="pickup-fields">
+            <label>
+              <span>Pickup name</span>
+              <input
+                type="text"
+                autocomplete="name"
+                placeholder="Name for pickup"
+                [ngModel]="pickupName()"
+                (ngModelChange)="pickupName.set($event)"
+              />
+            </label>
+            <label>
+              <span>Phone optional</span>
+              <input
+                type="tel"
+                autocomplete="tel"
+                placeholder="So we can call if needed"
+                [ngModel]="pickupPhone()"
+                (ngModelChange)="pickupPhone.set($event)"
+              />
+            </label>
+          </div>
+        }
       </section>
 
       <section class="cart-list">
@@ -81,15 +137,19 @@
           <span>Total</span>
           <strong>{{ formatMoney(cart.total()) }}</strong>
         </div>
+        <div class="payment-note">
+          <span>Payment</span>
+          <strong>Pay at counter</strong>
+        </div>
       </section>
 
       <button
         class="submit-order"
         type="button"
-        [disabled]="isSubmitting()"
-        (click)="submitOrder()"
+        [disabled]="!canSubmit()"
+        (click)="openPaymentPrompt()"
       >
-        {{ isSubmitting() ? 'Sending order...' : 'Submit order' }}
+        {{ submitLabel() }}
       </button>
     } @else {
       <section class="empty-cart">
@@ -100,3 +160,54 @@
     }
   </section>
 </main>
+
+@if (showPaymentPrompt()) {
+  <section class="payment-backdrop" (click)="closePaymentPrompt()">
+    <article
+      class="payment-dialog"
+      role="dialog"
+      aria-modal="true"
+      (click)="$event.stopPropagation()"
+    >
+      <p>Payment</p>
+      <h2>
+        {{
+          orderType() === 'TAKEOUT'
+            ? 'Pay at pickup when it is ready'
+            : orderType() === 'PACKED_TO_GO'
+              ? 'Pay at the counter with your table bill'
+              : 'Pay at the counter after dining'
+        }}
+      </h2>
+      @if (orderType() === 'TAKEOUT') {
+        <span>
+          Your order will be sent to the kitchen now. Pay {{ formatMoney(cart.total()) }} at the
+          counter when it is ready for pickup.
+        </span>
+      } @else if (orderType() === 'PACKED_TO_GO') {
+        <span>
+          This packed order will be sent to the kitchen now, labelled for packing, and added to
+          Table {{ tableNumber() }}. Pay the combined table total at the counter before leaving.
+        </span>
+      } @else {
+        <span>
+          This round will be sent to the kitchen now and added to your table bill. You can order
+          more later, then pay the final total at the counter before leaving.
+        </span>
+      }
+      <div class="payment-actions">
+        <button class="secondary-action" type="button" (click)="closePaymentPrompt()">
+          Review cart
+        </button>
+        <button
+          class="primary-action"
+          type="button"
+          [disabled]="isSubmitting()"
+          (click)="submitOrder()"
+        >
+          {{ isSubmitting() ? 'Saving...' : 'I understand' }}
+        </button>
+      </div>
+    </article>
+  </section>
+}

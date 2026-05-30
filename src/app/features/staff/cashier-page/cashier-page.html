@@ -1,0 +1,142 @@
+<main class="cashier-shell">
+  <section class="cashier-frame">
+    <header class="cashier-header">
+      <nav>
+        <a routerLink="/menu/table/T12">Menu</a>
+        <a routerLink="/admin/menu">Admin</a>
+      </nav>
+      <div>
+        <p>Staff</p>
+        <h1>Cashier</h1>
+      </div>
+    </header>
+
+    <section class="counter-summary">
+      <div>
+        <span>Open bills</span>
+        <strong>{{ openBillCount() }}</strong>
+      </div>
+      <div>
+        <span>Total due</span>
+        <strong>{{ formatMoney(unpaidTotal()) }}</strong>
+      </div>
+    </section>
+
+    <label class="table-search">
+      <span>Find table bill</span>
+      <input
+        type="search"
+        placeholder="T12"
+        [ngModel]="tableSearch()"
+        (ngModelChange)="tableSearch.set($event)"
+      />
+    </label>
+
+    @if (isLoading()) {
+      <section class="empty-state">Loading counter orders...</section>
+    } @else if (unpaidOrders().length) {
+      <section class="billing-grid" aria-label="Unpaid orders">
+        <section class="bill-column table-column" aria-label="Table bills">
+          <div class="column-heading">
+            <span>Table bills</span>
+            <strong>{{ visibleTableBills().length }}</strong>
+          </div>
+
+          @if (visibleTableBills().length) {
+            @for (table of visibleTableBills(); track table.tableNumber) {
+              <article class="counter-order table-bill">
+                <div class="order-topline">
+                  <div>
+                    <p>Dine in + packed</p>
+                    <h2>Table {{ table.tableNumber }}</h2>
+                  </div>
+                  <strong>{{ formatMoney(table.totalDue) }}</strong>
+                </div>
+                <div class="order-context">
+                  <span>{{ table.orders.length }} order rounds</span>
+                  <em>{{ table.itemCount }} items</em>
+                </div>
+                <section class="round-list">
+                  @for (order of table.orders; track order.orderNumber) {
+                    <div class="round-row">
+                      <span>
+                        #{{ order.orderNumber }}
+                        <em [class.packed]="order.orderType === 'PACKED_TO_GO'">
+                          {{ order.orderType === 'PACKED_TO_GO' ? 'Packed' : 'Dine in' }}
+                        </em>
+                      </span>
+                      <strong>{{ formatMoney(order.totalAmount) }}</strong>
+                    </div>
+                    <section class="mini-items">
+                      @for (item of order.items; track $index) {
+                        <span>{{ item.quantity }}x {{ item.itemNameSnapshot }}</span>
+                      }
+                    </section>
+                  }
+                </section>
+                <button
+                  type="button"
+                  [disabled]="activeTableNumber() === table.tableNumber"
+                  (click)="markTablePaid(table)"
+                >
+                  {{
+                    activeTableNumber() === table.tableNumber
+                      ? 'Marking table paid...'
+                      : 'Mark table paid'
+                  }}
+                </button>
+              </article>
+            }
+          } @else {
+            <section class="empty-state compact">No matching table bills.</section>
+          }
+        </section>
+
+        <section class="bill-column takeout-column" aria-label="Takeout orders">
+          <div class="column-heading">
+            <span>Takeout</span>
+            <strong>{{ unpaidTakeoutOrders().length }}</strong>
+          </div>
+
+          @if (unpaidTakeoutOrders().length) {
+            @for (order of unpaidTakeoutOrders(); track order.orderNumber) {
+              <article class="counter-order">
+                <div class="order-topline">
+                  <div>
+                    <p>Takeout</p>
+                    <h2>#{{ order.orderNumber }}</h2>
+                  </div>
+                  <strong>{{ formatMoney(order.totalAmount) }}</strong>
+                </div>
+                <div class="order-context">
+                  <span>{{ order.pickupName }}</span>
+                  <em>{{ itemCount(order) }} items</em>
+                </div>
+                <section class="mini-items">
+                  @for (item of order.items; track $index) {
+                    <span>{{ item.quantity }}x {{ item.itemNameSnapshot }}</span>
+                  }
+                </section>
+                <button
+                  type="button"
+                  [disabled]="activeOrderNumber() === order.orderNumber"
+                  (click)="markPaid(order.orderNumber)"
+                >
+                  {{
+                    activeOrderNumber() === order.orderNumber
+                      ? 'Marking paid...'
+                      : 'Mark paid at pickup'
+                  }}
+                </button>
+              </article>
+            }
+          } @else {
+            <section class="empty-state compact">No takeout payments waiting.</section>
+          }
+        </section>
+      </section>
+    } @else {
+      <section class="empty-state">No unpaid orders at the counter.</section>
+    }
+  </section>
+</main>

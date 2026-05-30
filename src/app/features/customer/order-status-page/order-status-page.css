@@ -13,6 +13,10 @@
 
 .status-header,
 .order-meta,
+.pickup-meta,
+.payment-meta,
+.bill-heading,
+.bill-round,
 .order-line,
 .total-line {
   display: flex;
@@ -149,11 +153,128 @@
 }
 
 .order-meta span,
+.pickup-meta span,
+.payment-meta span,
 .total-line span,
 .order-line span {
   color: var(--muted);
   font-size: 0.82rem;
   font-weight: 760;
+}
+
+.pickup-meta {
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(24, 63, 45, 0.07);
+}
+
+.pickup-meta strong {
+  color: var(--forest);
+}
+
+.pickup-meta em {
+  color: var(--muted);
+  font-style: normal;
+  font-weight: 760;
+}
+
+.payment-meta {
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(24, 63, 45, 0.07);
+}
+
+.payment-meta strong {
+  color: var(--forest);
+}
+
+.payment-meta em {
+  padding: 5px 8px;
+  border-radius: 999px;
+  color: var(--clay);
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 820;
+  background: rgba(166, 91, 57, 0.12);
+}
+
+.payment-instruction {
+  margin: 0;
+  padding: 12px;
+  border-radius: 14px;
+  color: var(--muted);
+  font-weight: 760;
+  background: rgba(166, 91, 57, 0.1);
+}
+
+.bill-card {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(24, 63, 45, 0.07);
+}
+
+.bill-heading span,
+.bill-round span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 760;
+}
+
+.bill-heading strong,
+.bill-round strong {
+  color: var(--forest);
+}
+
+.bill-round small {
+  margin-left: 6px;
+  padding: 3px 7px;
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 0.66rem;
+  background: rgba(255, 250, 241, 0.82);
+}
+
+.bill-round small.packed {
+  color: var(--clay);
+  background: rgba(166, 91, 57, 0.12);
+}
+
+.bill-round {
+  align-items: flex-start;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.bill-round:first-of-type {
+  border-top: 0;
+}
+
+.bill-round div {
+  display: grid;
+  gap: 3px;
+}
+
+.bill-round em {
+  color: var(--clay);
+  font-style: normal;
+  font-weight: 820;
+}
+
+.bill-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.bill-items span {
+  padding: 5px 8px;
+  border-radius: 999px;
+  color: var(--forest);
+  font-size: 0.72rem;
+  font-weight: 760;
+  background: rgba(255, 250, 241, 0.78);
 }
 
 .order-line {

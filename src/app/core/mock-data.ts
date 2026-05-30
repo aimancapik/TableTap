@@ -20,7 +20,8 @@ export const MENU_ITEMS: MenuItem[] = [
     id: 101,
     categoryId: 1,
     name: 'Nasi Lemak Royale',
-    description: 'Coconut rice, sambal tumis, crispy anchovies, peanuts, cucumber, and ayam berempah.',
+    description:
+      'Coconut rice, sambal tumis, crispy anchovies, peanuts, cucumber, and ayam berempah.',
     price: 18.9,
     imageUrl:
       'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=900&q=80',
@@ -147,11 +148,14 @@ export const MENU_ITEMS: MenuItem[] = [
 
 export const SAMPLE_ORDER: Order = {
   orderNumber: 'A1001',
+  orderType: 'DINE_IN',
   tableNumber: 'T12',
-  status: 'PREPARING',
+  status: 'RECEIVED',
   subtotal: 34.8,
   serviceCharge: 2.09,
   totalAmount: 36.89,
+  paymentMethod: 'PAY_AT_COUNTER',
+  paymentStatus: 'UNPAID',
   customerNote: 'Please serve drinks first.',
   createdAt: new Date(Date.now() - 1000 * 60 * 7).toISOString(),
   items: [

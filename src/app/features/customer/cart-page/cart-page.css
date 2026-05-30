@@ -12,7 +12,6 @@
 }
 
 .cart-header,
-.table-note,
 .item-title,
 .item-actions,
 .summary div {
@@ -52,12 +51,46 @@
   font-weight: 760;
 }
 
-.table-note {
+.fulfillment-card {
   margin-top: 14px;
   padding: 10px 12px;
   border: 1px solid var(--line);
   border-radius: 14px;
   background: rgba(255, 250, 241, 0.78);
+}
+
+.fulfillment-tabs,
+.table-note {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.fulfillment-tabs {
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+}
+
+.fulfillment-tabs button {
+  flex: 1;
+  min-height: 38px;
+  border: 0;
+  border-radius: 999px;
+  color: var(--muted);
+  font-weight: 820;
+  background: transparent;
+}
+
+.fulfillment-tabs button.active {
+  color: #fff;
+  background: var(--forest);
+}
+
+.table-note {
+  margin-top: 10px;
 }
 
 .table-note span {
@@ -70,6 +103,17 @@
   color: #fff;
   font-size: 0.84rem;
   background: var(--forest);
+}
+
+.packed-note span {
+  color: var(--forest);
+  font-weight: 760;
+}
+
+.pickup-fields {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
 }
 
 .cart-list {
@@ -227,6 +271,16 @@ textarea:focus {
   font-size: 1.08rem;
 }
 
+.summary .payment-note {
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(24, 63, 45, 0.07);
+}
+
+.summary .payment-note strong {
+  color: var(--forest);
+}
+
 .submit-order {
   width: 100%;
   min-height: 54px;
@@ -239,6 +293,77 @@ textarea:focus {
 }
 
 .submit-order:disabled {
+  opacity: 0.7;
+}
+
+.payment-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: end center;
+  padding: 18px;
+  background: rgba(20, 28, 24, 0.44);
+}
+
+.payment-dialog {
+  width: min(100%, 408px);
+  padding: 20px;
+  border: 1px solid rgba(255, 250, 241, 0.24);
+  border-radius: 22px;
+  background: var(--cream);
+  box-shadow: 0 22px 60px rgba(24, 63, 45, 0.22);
+}
+
+.payment-dialog p {
+  margin: 0 0 7px;
+  color: var(--forest-soft);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.payment-dialog h2 {
+  margin: 0;
+  font-size: 1.55rem;
+  font-weight: 820;
+  line-height: 1.08;
+}
+
+.payment-dialog span {
+  display: block;
+  margin-top: 10px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.payment-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.payment-actions button {
+  min-height: 48px;
+  border-radius: 14px;
+  font-weight: 820;
+}
+
+.secondary-action {
+  border: 1px solid var(--line);
+  color: var(--forest);
+  background: rgba(255, 250, 241, 0.78);
+}
+
+.primary-action {
+  border: 0;
+  color: #fff;
+  background: var(--forest);
+}
+
+.primary-action:disabled {
   opacity: 0.7;
 }
 

@@ -6,6 +6,7 @@ import { LucideMinus, LucidePlus } from '@lucide/angular';
 
 import { CartService } from '../../../core/cart.service';
 import { formatMoney } from '../../../core/money';
+import { OrderType } from '../../../core/models';
 import { OrderService } from '../../../core/order.service';
 import { TableService } from '../../../core/table.service';
 
@@ -20,10 +21,37 @@ export class CartPage {
   private readonly orderService = inject(OrderService);
   readonly cart = inject(CartService);
   readonly tableService = inject(TableService);
+  readonly orderType = signal<OrderType>('DINE_IN');
+  readonly pickupName = signal('');
+  readonly pickupPhone = signal('');
   readonly customerNote = signal('');
   readonly isSubmitting = signal(false);
+  readonly showPaymentPrompt = signal(false);
 
   readonly tableNumber = computed(() => this.tableService.currentTableNumber());
+  readonly canSubmit = computed(() => {
+    if (!this.cart.items().length || this.isSubmitting()) {
+      return false;
+    }
+
+    return this.orderType() !== 'TAKEOUT' || this.pickupName().trim().length > 0;
+  });
+
+  readonly submitLabel = computed(() => {
+    if (this.isSubmitting()) {
+      return 'Sending order...';
+    }
+
+    if (this.orderType() === 'TAKEOUT') {
+      return 'Place takeout order';
+    }
+
+    if (this.orderType() === 'PACKED_TO_GO') {
+      return 'Place pack-to-go order';
+    }
+
+    return 'Place order';
+  });
 
   formatMoney = formatMoney;
 
@@ -39,15 +67,39 @@ export class CartPage {
     this.cart.removeItem(cartId);
   }
 
-  submitOrder() {
-    if (!this.cart.items().length || this.isSubmitting()) {
+  selectOrderType(orderType: OrderType) {
+    this.orderType.set(orderType);
+  }
+
+  openPaymentPrompt() {
+    if (!this.canSubmit()) {
       return;
     }
 
+    this.showPaymentPrompt.set(true);
+  }
+
+  closePaymentPrompt() {
+    if (this.isSubmitting()) {
+      return;
+    }
+
+    this.showPaymentPrompt.set(false);
+  }
+
+  submitOrder() {
+    if (!this.canSubmit()) {
+      return;
+    }
+
+    this.showPaymentPrompt.set(false);
     this.isSubmitting.set(true);
     this.orderService
       .createOrder({
+        orderType: this.orderType(),
         tableNumber: this.tableNumber(),
+        pickupName: this.pickupName().trim(),
+        pickupPhone: this.pickupPhone().trim(),
         customerNote: this.customerNote(),
         cartItems: this.cart.items(),
         subtotal: this.cart.subtotal(),

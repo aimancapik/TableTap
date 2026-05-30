@@ -10,13 +10,13 @@
 
     @if (order(); as currentOrder) {
       <section class="status-hero">
-        <p>Table {{ currentOrder.tableNumber }}</p>
-        <h2>{{ steps[currentStepIndex()].label }}</h2>
-        <span>{{ steps[currentStepIndex()].hint }}</span>
+        <p>{{ orderLabel() }}</p>
+        <h2>{{ steps()[currentStepIndex()].label }}</h2>
+        <span>{{ steps()[currentStepIndex()].hint }}</span>
       </section>
 
       <section class="progress-card">
-        @for (step of steps; track step.status; let index = $index) {
+        @for (step of steps(); track step.status; let index = $index) {
           <article [class.complete]="isStepComplete(index)">
             <div class="dot">{{ index + 1 }}</div>
             <div>
@@ -32,10 +32,26 @@
           <span>Placed</span>
           <strong>{{ currentOrder.createdAt | date: 'shortTime' }}</strong>
         </div>
-        @for (item of currentOrder.items; track item.menuItemId) {
+        @if (currentOrder.orderType === 'TAKEOUT') {
+          <div class="pickup-meta">
+            <span>Pickup</span>
+            <strong>{{ currentOrder.pickupName }}</strong>
+            @if (currentOrder.pickupPhone) {
+              <em>{{ currentOrder.pickupPhone }}</em>
+            }
+          </div>
+        }
+        @for (item of currentOrder.items; track $index) {
           <div class="order-line">
             <div>
               <strong>{{ item.quantity }}x {{ item.itemNameSnapshot }}</strong>
+              @if (item.addOns.length) {
+                <span>
+                  @for (addOn of item.addOns; track addOn.id) {
+                    {{ addOn.name }}{{ !$last ? ', ' : '' }}
+                  }
+                </span>
+              }
               @if (item.notes) {
                 <span>{{ item.notes }}</span>
               }
@@ -46,10 +62,61 @@
         @if (currentOrder.customerNote) {
           <p class="customer-note">{{ currentOrder.customerNote }}</p>
         }
-        <div class="total-line">
-          <span>Total paid at counter</span>
-          <strong>{{ formatMoney(currentOrder.totalAmount) }}</strong>
+        <div class="payment-meta">
+          <span>Payment</span>
+          <strong>Pay at counter</strong>
+          <em>{{ currentOrder.paymentStatus === 'PAID' ? 'Paid' : 'Unpaid' }}</em>
         </div>
+        @if (currentOrder.paymentStatus === 'UNPAID') {
+          <p class="payment-instruction">
+            {{
+              currentOrder.orderType === 'TAKEOUT'
+                ? 'Your order is already with the kitchen. Pay at the counter when it is ready for pickup.'
+                : currentOrder.orderType === 'PACKED_TO_GO'
+                  ? 'This packed round is on your table bill. You can order more and pay the final total before leaving.'
+                  : 'This round is on your table bill. You can order more and pay the final total before leaving.'
+            }}
+          </p>
+        }
+        <div class="total-line">
+          <span>{{
+            currentOrder.orderType === 'TAKEOUT'
+              ? 'Total due at pickup'
+              : 'Table bill due at counter'
+          }}</span>
+          <strong>{{
+            currentOrder.orderType === 'TAKEOUT'
+              ? formatMoney(currentOrder.totalAmount)
+              : formatMoney(tableBill()?.totalDue ?? currentOrder.totalAmount)
+          }}</strong>
+        </div>
+        @if (currentOrder.orderType !== 'TAKEOUT' && tableBill(); as bill) {
+          <section class="bill-card">
+            <div class="bill-heading">
+              <span>{{ bill.orders.length }} order rounds</span>
+              <strong>{{ bill.itemCount }} items</strong>
+            </div>
+            @for (billOrder of bill.orders; track billOrder.orderNumber) {
+              <article class="bill-round">
+                <div>
+                  <strong>
+                    #{{ billOrder.orderNumber }}
+                    <small [class.packed]="billOrder.orderType === 'PACKED_TO_GO'">
+                      {{ billOrder.orderType === 'PACKED_TO_GO' ? 'Packed' : 'Dine in' }}
+                    </small>
+                  </strong>
+                  <span>{{ billOrder.createdAt | date: 'shortTime' }}</span>
+                </div>
+                <em>{{ formatMoney(billOrder.totalAmount) }}</em>
+              </article>
+              <section class="bill-items">
+                @for (item of billOrder.items; track $index) {
+                  <span>{{ item.quantity }}x {{ item.itemNameSnapshot }}</span>
+                }
+              </section>
+            }
+          </section>
+        }
       </section>
     } @else {
       <section class="loading-status">Finding your order...</section>

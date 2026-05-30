@@ -1,4 +1,8 @@
-export type OrderStatus = 'RECEIVED' | 'PREPARING' | 'READY' | 'SERVED';
+export type OrderStatus = 'AWAITING_PAYMENT' | 'RECEIVED' | 'PREPARING' | 'READY' | 'SERVED';
+export type OrderType = 'DINE_IN' | 'PACKED_TO_GO' | 'TAKEOUT';
+export type PaymentMethod = 'PAY_AT_COUNTER';
+export type PaymentStatus = 'UNPAID' | 'PAID';
+export type KitchenTicketStatus = 'RECEIVED';
 
 export interface Category {
   id: number;
@@ -59,14 +63,40 @@ export interface OrderItem {
 
 export interface Order {
   orderNumber: string;
-  tableNumber: string;
+  orderType: OrderType;
+  tableNumber?: string;
+  pickupName?: string;
+  pickupPhone?: string;
   status: OrderStatus;
   items: OrderItem[];
   subtotal: number;
   serviceCharge: number;
   totalAmount: number;
+  paymentMethod: PaymentMethod;
+  paymentStatus: PaymentStatus;
   customerNote: string;
   createdAt: string;
+  paidAt?: string;
+}
+
+export interface KitchenTicket {
+  orderNumber: string;
+  orderType: OrderType;
+  tableNumber?: string;
+  pickupName?: string;
+  items: OrderItem[];
+  customerNote: string;
+  status: KitchenTicketStatus;
+  receivedAt: string;
+}
+
+export interface TableBill {
+  tableNumber: string;
+  orders: Order[];
+  subtotal: number;
+  serviceCharge: number;
+  totalDue: number;
+  itemCount: number;
 }
 
 export interface MenuPayload {

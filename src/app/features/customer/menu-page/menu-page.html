@@ -5,10 +5,13 @@
         <p class="eyebrow">Good evening</p>
         <h1>TableTap Cafe</h1>
       </div>
-      <a class="cart-icon" routerLink="/cart" aria-label="Open cart">
-        <span>{{ cart.itemCount() }}</span>
-        <svg lucideShoppingBag size="24" strokeWidth="1.9" aria-hidden="true"></svg>
-      </a>
+      <div class="top-actions">
+        <a class="staff-link" routerLink="/cashier">Cashier</a>
+        <a class="cart-icon" routerLink="/cart" aria-label="Open cart">
+          <span>{{ cart.itemCount() }}</span>
+          <svg lucideShoppingBag size="24" strokeWidth="1.9" aria-hidden="true"></svg>
+        </a>
+      </div>
     </header>
 
     @if (invalidTable()) {

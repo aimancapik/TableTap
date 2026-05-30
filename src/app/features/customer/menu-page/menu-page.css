@@ -12,6 +12,7 @@
 }
 
 .topbar,
+.top-actions,
 .table-strip,
 .section-heading,
 .quantity-row,
@@ -21,6 +22,10 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+}
+
+.top-actions {
+  gap: 8px;
 }
 
 .eyebrow,
@@ -49,17 +54,30 @@
   font-weight: 760;
 }
 
+.staff-link,
 .cart-icon {
   position: relative;
-  display: grid;
   min-width: 52px;
   min-height: 52px;
-  place-items: center;
   border: 1px solid var(--line);
   border-radius: 18px;
   color: var(--forest);
   text-decoration: none;
   background: rgba(255, 250, 241, 0.82);
+}
+
+.staff-link,
+.cart-icon {
+  display: grid;
+  place-items: center;
+}
+
+.staff-link {
+  min-width: auto;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 820;
 }
 
 .cart-icon span {
@@ -139,7 +157,7 @@
 
 .category-band strong {
   z-index: 1;
-  font-family: "Montserrat", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  font-family: 'Montserrat', 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
   font-size: clamp(1.22rem, 6.1vw, 1.64rem);
   font-weight: 800;
   letter-spacing: 0.34em;

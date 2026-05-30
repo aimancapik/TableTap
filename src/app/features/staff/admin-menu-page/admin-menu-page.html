@@ -1,0 +1,145 @@
+<main class="admin-shell">
+  <section class="admin-frame">
+    <header class="admin-header">
+      <nav>
+        <a routerLink="/cashier">Cashier</a>
+        <a routerLink="/menu/table/T12">Menu</a>
+      </nav>
+      <div>
+        <p>Admin</p>
+        <h1>Menu</h1>
+      </div>
+    </header>
+
+    <section class="admin-summary">
+      <div>
+        <span>Items</span>
+        <strong>{{ items().length }}</strong>
+      </div>
+      <div>
+        <span>Sold out</span>
+        <strong>{{ soldOutCount() }}</strong>
+      </div>
+    </section>
+
+    <section class="admin-tools" aria-label="Menu filters">
+      <label>
+        <span>Search menu</span>
+        <input
+          type="search"
+          placeholder="Name, description, tag..."
+          [ngModel]="searchTerm()"
+          (ngModelChange)="searchTerm.set($event)"
+        />
+      </label>
+
+      <nav class="category-tabs" aria-label="Categories">
+        <button
+          type="button"
+          [class.active]="activeCategoryId() === 'ALL'"
+          (click)="activeCategoryId.set('ALL')"
+        >
+          All
+        </button>
+        @for (category of categories(); track category.id) {
+          <button
+            type="button"
+            [class.active]="activeCategoryId() === category.id"
+            (click)="activeCategoryId.set(category.id)"
+          >
+            {{ category.name }}
+          </button>
+        }
+      </nav>
+    </section>
+
+    @if (isLoading()) {
+      <section class="empty-state">Loading menu...</section>
+    } @else if (filteredItems().length) {
+      <section class="menu-editor" aria-label="Editable menu items">
+        @for (item of filteredItems(); track item.id) {
+          <article class="admin-item" [class.sold-out]="!item.isAvailable">
+            <div class="item-preview">
+              <img [src]="item.imageUrl" [alt]="item.name" />
+              <div>
+                <p>{{ categoryName(item.categoryId) }}</p>
+                <h2>{{ item.name }}</h2>
+                <span>{{ formatMoney(item.price) }} - {{ item.prepMinutes }} min</span>
+              </div>
+              <button
+                type="button"
+                [class.sold]="!item.isAvailable"
+                [disabled]="savingItemId() === item.id"
+                (click)="toggleAvailability(item)"
+              >
+                {{ item.isAvailable ? 'Available' : 'Sold out' }}
+              </button>
+            </div>
+
+            <section class="edit-grid">
+              <label>
+                <span>Name</span>
+                <input
+                  type="text"
+                  [ngModel]="item.name"
+                  (ngModelChange)="updateText(item.id, 'name', $event)"
+                />
+              </label>
+
+              <label>
+                <span>Price</span>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.1"
+                  [ngModel]="item.price"
+                  (ngModelChange)="updatePrice(item.id, $event)"
+                />
+              </label>
+
+              <label>
+                <span>Prep minutes</span>
+                <input
+                  type="number"
+                  min="0"
+                  step="1"
+                  [ngModel]="item.prepMinutes"
+                  (ngModelChange)="updatePrepMinutes(item.id, $event)"
+                />
+              </label>
+
+              <label>
+                <span>Image URL</span>
+                <input
+                  type="url"
+                  [ngModel]="item.imageUrl"
+                  (ngModelChange)="updateText(item.id, 'imageUrl', $event)"
+                />
+              </label>
+
+              <label class="wide">
+                <span>Description</span>
+                <textarea
+                  rows="3"
+                  [ngModel]="item.description"
+                  (ngModelChange)="updateText(item.id, 'description', $event)"
+                ></textarea>
+              </label>
+
+              <label class="wide">
+                <span>Tags</span>
+                <input
+                  type="text"
+                  [ngModel]="item.tags.join(', ')"
+                  (ngModelChange)="updateTags(item.id, $event)"
+                />
+              </label>
+            </section>
+          </article>
+        }
+      </section>
+    } @else {
+      <section class="empty-state">No menu items match this filter.</section>
+    }
+  </section>
+</main>
